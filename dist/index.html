@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdminBus</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+
+<body>
+    <div class="flex justify-center items-center h-screen bg-gray-600">
+        <div class="w-96 p-6 shadow-md shadow-black bg-white rounded-md">
+            <h1 class="text-3xl block text-center font-semibold">
+                <i class="fa-solid fa-bus"></i>
+                <n></n>AdminBus
+            </h1>
+            <hr class="mt-3">
+            <div class="mt-3">
+                <label for="email" class="block text-base mb-2 font-semibold">Correo Electronico</label>
+                <input type="text" id='email'
+                    class="border w-full text-base px-2 py-1 focus:outline-none focus:ring-0 focus:border-gray-600"
+                    placeholder="Ingresar Correo Electronico" />
+            </div>
+            <div class="mt-3">
+                <label for="password" class="block text-base mb-2 font-semibold">Contraseña</label>
+                <input type="password" id='password'
+                    class="border w-full text-base px-2 py-1 focus:outline-none focus:ring-0 focus:border-gray-600"
+                    placeholder="Ingresar Contraseña" />
+            </div>
+            <div class="mt-3 flex justify-between items-center font-semibold">
+                <div>
+                    <input type="checkbox">
+                    <label for="">Recordar Usuario</label>
+                </div>
+                <div class="text-gray-600">
+                    <a href="#">Recuperar Contraseña</a>
+                </div>
+            </div>
+            <div mt-5>
+                <button type="submit" id='login' name="login" value="Login" class="mt-5 border-2 
+                border-gray-500 bg-gray-500 rounded-md
+                text-white py-1 w-full hover:bg-transparent hover:text-gray-500 hover:text">
+
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    <n>Login
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.19.0/firebase-app.js";
+    import { getdatabase, set, ref, update } from "https://www.gstatic.com/firebasejs/9.19.0/firebase-database.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.19.0/firebase-auth.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyAOzROwMOZSlm7hx65hnTUeHXdr13kj6CE",
+        authDomain: "adminbus-ca01b.firebaseapp.com",
+        databaseURL: "https://adminbus-ca01b-default-rtdb.firebaseio.com",
+        projectId: "adminbus-ca01b",
+        storageBucket: "adminbus-ca01b.appspot.com",
+        messagingSenderId: "703939470057",
+        appId: "1:703939470057:web:f715353a4f2d52f0124678"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getdatabase(app);
+    const auth = getAuth();
+
+    signin.addEventListener('click', (e) => {
+
+        var email = document.getElementById('email').value;
+        var password = document.getElementById('password').value;
+
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                // Signed in 
+                const user = userCredential.user;
+
+                set(ref(database, 'users/' + user.uid), {
+
+                    username: username,
+                    email: email
+
+                })
+                alert('user created!');
+
+                // ...
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+
+                alert(errorMessage);
+                // ..
+            });
+
+    });
+
+    login.addEventListener('click', (e) => {
+
+        var email = document.getElementById('email').value;
+        var password = document.getElementById('password').value;
+
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                // Signed in 
+                const user = userCredential.user;
+
+                const dt = new Date();
+
+                update(ref(database, 'users/' + user.uid), {
+
+                    last_login: dt,
+                })
+
+                alert('login!');
+                // ...
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+
+                alert(errorMessage);
+
+            });
+
+    });
+
+</script>
+
+</html>
